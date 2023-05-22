@@ -28,11 +28,7 @@ class UsersController extends Controller
             return UserResource::collection($users);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'user' => null,
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -56,14 +52,10 @@ class UsersController extends Controller
             return response()->json([
                 'message' => 'User created',
                 'response_code' => CodeResponses::SUCCESS->value,
-                'user' => $user,
+                'data' => $user,
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'user' => null,
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -80,11 +72,7 @@ class UsersController extends Controller
             return new UserResource($user);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'user' => null,
-            ]);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -105,14 +93,10 @@ class UsersController extends Controller
             return response()->json([
                 'message' => 'User updated',
                 'response_code' => CodeResponses::SUCCESS->value,
-                'user' => $user,
+                'data' => $user,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'user' => null,
-            ]);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 

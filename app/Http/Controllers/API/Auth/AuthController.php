@@ -16,15 +16,20 @@ class AuthController extends Controller
      */
     public function login(Request $request) : JsonResponse
     {
-        $credentials = $request->only(['email', 'password']);
+        try {
+            $credentials = $request->only(['email', 'password']);
 
-        if (! $token = auth('api')->attempt($credentials)) {
-            return response()->json([
-                'error' => 'Unauthorized'
-            ], Response::HTTP_UNAUTHORIZED);
+            if (! $token = auth('api')->attempt($credentials)) {
+                return response()->json([
+                    'error' => 'Unauthorized'
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+    
+            return $this->respondWithToken($token);
+        } catch (\Exception $e) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
 
-        return $this->respondWithToken($token);
     }
 
     /**

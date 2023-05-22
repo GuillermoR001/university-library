@@ -10,7 +10,6 @@ use App\Http\Resources\Book\BookResource;
 use App\Models\Book;
 use App\Services\BookServices;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -38,7 +37,6 @@ class BooksController extends Controller
             return response()->json([
                 'message' => $this->serverErrorMessage,
                 'response_code' => CodeResponses::FAIL->value,
-                'data' => null,
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -54,20 +52,15 @@ class BooksController extends Controller
         try {
             $validated = $request->validated();
 
-            $book = Book::create($validated);
+            Book::create($validated);
 
             return response()->json([
                 'message' => 'Book created',
                 'response_code' => CodeResponses::SUCCESS->value,
-                'book' => $book,
             ], Response::HTTP_CREATED);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'book' => null,
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -84,11 +77,7 @@ class BooksController extends Controller
             return new BookResource($book);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'book' => null,
-            ]);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -124,15 +113,10 @@ class BooksController extends Controller
             return response()->json([
                 'message' => 'Book updated',
                 'response_code' => CodeResponses::SUCCESS->value,
-                'book' => $book,
             ], Response::HTTP_CREATED);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'book' => null,
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
