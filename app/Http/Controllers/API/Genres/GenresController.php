@@ -8,7 +8,6 @@ use App\Http\Requests\Genre\GenreRequest;
 use App\Http\Resources\Genre\GenreResource;
 use App\Models\Genre;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class GenresController extends Controller
@@ -23,13 +22,8 @@ class GenresController extends Controller
         try {
             $genres = Genre::all();
             return GenreResource::collection($genres);
-
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'data' => null,
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -49,15 +43,11 @@ class GenresController extends Controller
             return response()->json([
                 'message' => 'Genre created',
                 'response_code' => CodeResponses::SUCCESS->value,
-                'genre' => $genre,
+                'data' => $genre,
             ], Response::HTTP_CREATED);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'genre' => null,
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -74,11 +64,7 @@ class GenresController extends Controller
             return new GenreResource($genre);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'genre' => null,
-            ]);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 
@@ -99,14 +85,10 @@ class GenresController extends Controller
             return response()->json([
                 'message' => 'User updated',
                 'response_code' => CodeResponses::SUCCESS->value,
-                'genre' => $genre,
+                'data' => $genre,
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $this->serverErrorMessage,
-                'response_code' => CodeResponses::FAIL->value,
-                'user' => null,
-            ]);
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, $this->serverErrorMessage);
         }
     }
 

@@ -24,6 +24,6 @@ class Book extends Model
      */
     public function genre() : \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne(Genre::class);
+        return $this->hasOne(Genre::class, 'id', 'genre_id');
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use App\Enums\CodeResponses;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class Handler extends ExceptionHandler
 {
@@ -38,4 +41,24 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json([
+                'error' => 'Entry for '.str_replace('App', '', $exception->getModel()).' not found',
+                'response_code' => CodeResponses::FAIL->value,
+            ], 404);
+        }
+
+        if ($exception instanceof JWTException) {
+            return response()->json([
+                'error' => 'Unauthorized',
+                'response_code' => CodeResponses::FAIL->value,
+            ], 401);
+        }
+
+        return parent::render($request, $exception);
+    }
+
 }

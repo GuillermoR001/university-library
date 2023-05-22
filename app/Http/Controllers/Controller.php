@@ -11,5 +11,5 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $serverErrorMessage = 'There is error try again.';
+    protected $serverErrorMessage = 'There is an error try again.';
 }
